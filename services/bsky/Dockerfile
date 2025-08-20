@@ -63,6 +63,6 @@ ENV NODE_ENV=production
 USER node
 CMD ["node", "--heapsnapshot-signal=SIGUSR2", "--enable-source-maps", "api.js"]
 
-LABEL org.opencontainers.image.source=https://github.com/bluesky-social/atproto
-LABEL org.opencontainers.image.description="Bsky App View"
+LABEL org.opencontainers.image.source=https://github.com/Next-House-Org/atproto
+LABEL org.opencontainers.image.description="bluesky-appview"
 LABEL org.opencontainers.image.licenses=MIT
