@@ -1,5 +1,8 @@
 FROM node:20.11-alpine as build
 
+# Install build tools
+RUN apk add --no-cache python3 make g++ git bash curl jq
+
 RUN corepack enable
 
 WORKDIR /app
@@ -44,13 +47,23 @@ WORKDIR services/bsky
 # Uses assets from build stage to reduce build size
 FROM node:20.11-alpine
 
-# dumb-init is used to handle signals properly.
-# runit is installed so it can be (optionally) used for logging via svlogd.
-RUN apk add --update dumb-init runit
+# Install runtime tools and utilities
+RUN apk add --no-cache \
+    dumb-init \
+    curl \
+    openssl \
+    coreutils \
+    vim bash git jq \
+    sqlite \
+    postgresql-client \
+    runit
 
+# Create a non-root user and set permissions
+RUN addgroup -S appuser && \
+    adduser -S -G appuser -h /app appuser && \
+    chown -R appuser:appuser /app
 
-# Avoid zombie processes, handle signal forwarding
-ENTRYPOINT ["dumb-init", "--"]
+USER appuser
 
 WORKDIR /app/services/bsky
 COPY --from=build /app /app
@@ -60,8 +73,7 @@ ENV PORT=3000
 ENV NODE_ENV=production
 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user
-USER node
-CMD ["node", "--heapsnapshot-signal=SIGUSR2", "--enable-source-maps", "api.js"]
+CMD ["dumb-init", "--", "node", "--heapsnapshot-signal=SIGUSR2", "--enable-source-maps", "api.js"]
 
 LABEL org.opencontainers.image.source=https://github.com/Next-House-Org/atproto
 LABEL org.opencontainers.image.description="bluesky-appview"
