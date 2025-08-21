@@ -47,5 +47,17 @@
   "prettier.semi": false,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "es5",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "cSpell.words": [
+    "addgroup",
+    "adduser",
+    "appuser",
+    "coreutils",
+    "healthcheck",
+    "heapsnapshot",
+    "knockthedoor",
+    "nexthouse",
+    "runit",
+    "SIGUSR"
+  ]
 }
