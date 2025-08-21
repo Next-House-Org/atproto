@@ -12,21 +12,11 @@ services:
       - ./appview.env
     environment:
       - NODE_ENV=production
-      - PGDATA=/data/postgres
     volumes:
-      - appview_data:/data
-      - ./bluesky-appview/data:/app/BskyAppViewLiteData
+      - ./bluesky-appview/data:/app/data  # Persistent data directory
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/xrpc/app.bsky.actor.getProfile?actor=bsky.app"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 5s
-
-volumes:
-  appview_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${PWD}/bluesky-appview/persistent-data
